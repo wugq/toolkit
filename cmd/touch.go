@@ -39,13 +39,13 @@ func init() {
 }
 
 func runTouch(args []string) {
-	var currentTime = time.Now().Local()
-	var filename = args[0]
+	currentTime := time.Now().Local()
+	filename := args[0]
 	if _, err := os.Stat(filename); errors.Is(err, os.ErrNotExist) {
 		fmt.Printf("File not found : %v\n", filename)
 	}
 
-	var isDir, _ = fileUtil.IsDirectory(filename)
+	isDir, _ := fileUtil.IsDirectory(filename)
 	if isDir && touchCmdData.isRecursive {
 		touchRunner.UpdateDirectoryRecursively(filename, currentTime)
 	}
