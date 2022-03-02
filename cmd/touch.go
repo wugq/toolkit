@@ -51,11 +51,10 @@ func run(args []string) {
 	}
 
 	var isDir, _ = isDirectory(filename)
-	if isDir {
+	if isDir && IsRecursive {
 		updateDirectory(filename)
-	} else {
-		touchFile(filename)
 	}
+	touchFile(filename)
 }
 
 func touchFile(filename string) {
