@@ -6,7 +6,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// uuidCmd represents the uuid command
 var uuidCmd = &cobra.Command{
 	Use:   "uuid",
 	Short: "Generate a UUID string.",
