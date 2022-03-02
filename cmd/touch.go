@@ -11,12 +11,12 @@ import (
 	"time"
 )
 
-type touchCmdData struct {
+type TouchCmdData struct {
 	isRecursive bool
 	currentTime time.Time
 }
 
-var touchCmdInfo touchCmdData
+var touchCmdData TouchCmdData
 
 var touchCmd = &cobra.Command{
 	Use:   "touch FILE",
@@ -37,18 +37,18 @@ var touchCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(touchCmd)
-	touchCmd.Flags().BoolVarP(&touchCmdInfo.isRecursive, "recursive", "r", false, "Update files recursively")
+	touchCmd.Flags().BoolVarP(&touchCmdData.isRecursive, "recursive", "r", false, "Update files recursively")
 }
 
 func runTouch(args []string) {
-	touchCmdInfo.currentTime = time.Now().Local()
+	touchCmdData.currentTime = time.Now().Local()
 	var filename = args[0]
 	if _, err := os.Stat(filename); errors.Is(err, os.ErrNotExist) {
 		fmt.Printf("File not found : %v\n", filename)
 	}
 
 	var isDir, _ = isDirectory(filename)
-	if isDir && touchCmdInfo.isRecursive {
+	if isDir && touchCmdData.isRecursive {
 		updateDirectory(filename)
 	}
 	touchFile(filename)
@@ -68,7 +68,7 @@ func touchFile(filename string) {
 		fmt.Printf("Touch file: %v\n", filename)
 	}
 
-	err = os.Chtimes(filename, touchCmdInfo.currentTime, touchCmdInfo.currentTime)
+	err = os.Chtimes(filename, touchCmdData.currentTime, touchCmdData.currentTime)
 
 }
 
