@@ -34,7 +34,7 @@ var touchCmd = &cobra.Command{
 			os.Exit(0)
 		}
 
-		run(args)
+		runTouch(args)
 	},
 }
 
@@ -44,7 +44,7 @@ func init() {
 	touchCmd.Flags().BoolVarP(&Verbose, "verbose", "v", false, "Show verbose information")
 }
 
-func run(args []string) {
+func runTouch(args []string) {
 	var filename = args[0]
 	if _, err := os.Stat(filename); errors.Is(err, os.ErrNotExist) {
 		fmt.Printf("File not found : %v\n", filename)
