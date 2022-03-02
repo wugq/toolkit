@@ -11,21 +11,18 @@ import (
 	"time"
 )
 
-var IsRecursive bool
-var Verbose bool
-var currentTime = time.Now().Local()
+type touchCmdData struct {
+	isRecursive bool
+	currentTime time.Time
+}
+
+var touchCmdInfo touchCmdData
 
 var touchCmd = &cobra.Command{
 	Use:   "touch FILE",
 	Short: "Update the modification time of a file or directory.",
 	Long:  `Update the modification time of a file or directory, like touch in Linux.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if Verbose {
-			fmt.Printf("Arguments : %v\n", args)
-			fmt.Printf("IsRecursive flag: %v\n", IsRecursive)
-			fmt.Printf("Verbose flag: %v\n", Verbose)
-		}
-
 		if len(args) != 1 {
 			err := cmd.Help()
 			if err != nil {
@@ -40,18 +37,18 @@ var touchCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(touchCmd)
-	touchCmd.Flags().BoolVarP(&IsRecursive, "recursive", "r", false, "Update files recursively")
-	touchCmd.Flags().BoolVarP(&Verbose, "verbose", "v", false, "Show verbose information")
+	touchCmd.Flags().BoolVarP(&touchCmdInfo.isRecursive, "recursive", "r", false, "Update files recursively")
 }
 
 func runTouch(args []string) {
+	touchCmdInfo.currentTime = time.Now().Local()
 	var filename = args[0]
 	if _, err := os.Stat(filename); errors.Is(err, os.ErrNotExist) {
 		fmt.Printf("File not found : %v\n", filename)
 	}
 
 	var isDir, _ = isDirectory(filename)
-	if isDir && IsRecursive {
+	if isDir && touchCmdInfo.isRecursive {
 		updateDirectory(filename)
 	}
 	touchFile(filename)
@@ -71,7 +68,7 @@ func touchFile(filename string) {
 		fmt.Printf("Touch file: %v\n", filename)
 	}
 
-	err = os.Chtimes(filename, currentTime, currentTime)
+	err = os.Chtimes(filename, touchCmdInfo.currentTime, touchCmdInfo.currentTime)
 
 }
 
