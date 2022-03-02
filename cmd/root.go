@@ -16,7 +16,7 @@ var rootCmd = &cobra.Command{
 	Short: "WuGQ's toolkit",
 	Long: `WuGQ's toolkit
 
-My Common tool box for daily routine. `,
+My toolbox for daily routine. `,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

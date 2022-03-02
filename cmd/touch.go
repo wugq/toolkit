@@ -17,8 +17,8 @@ var currentTime = time.Now().Local()
 
 var touchCmd = &cobra.Command{
 	Use:   "touch FILE",
-	Short: "Update the modification time of a file or folder an its descendants.",
-	Long:  `Update the modification time of a file or folder an its descendants, like touch in Linux.`,
+	Short: "Update the modification time of a file or directory.",
+	Long:  `Update the modification time of a file or directory, like touch in Linux.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if Verbose {
 			fmt.Printf("Arguments : %v\n", args)
@@ -41,7 +41,7 @@ var touchCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(touchCmd)
 	touchCmd.Flags().BoolVarP(&IsRecursive, "recursive", "r", false, "Update files recursively")
-	touchCmd.Flags().BoolVarP(&Verbose, "verbose", "v", false, "Update files recursively")
+	touchCmd.Flags().BoolVarP(&Verbose, "verbose", "v", false, "Show verbose information")
 }
 
 func run(args []string) {
