@@ -5,15 +5,11 @@ import (
 	"github.com/spf13/cobra"
 	"math/rand"
 	"os"
-	"strconv"
 	"strings"
+	"toolkit/runner/passwordRunner"
 )
 
-var UseUppercase bool
-var UseLowercase bool
-var UseNumber bool
-var UseSymbol bool
-var Size = 8
+var passwordFlag passwordRunner.PasswordFlag
 
 var (
 	lowerCharSet  = "abcdedfghijklmnopqrst"
@@ -41,80 +37,59 @@ var passwordCmd = &cobra.Command{
 func init() {
 	generateCmd.AddCommand(passwordCmd)
 
-	passwordCmd.Flags().BoolVarP(&UseUppercase, "uppercase", "u", false, "use upper case")
-	passwordCmd.Flags().BoolVarP(&UseLowercase, "lowercase", "l", false, "use lower case")
-	passwordCmd.Flags().BoolVarP(&UseNumber, "number", "n", false, "use number")
-	passwordCmd.Flags().BoolVarP(&UseSymbol, "symbol", "s", false, "use symbol")
+	passwordCmd.Flags().BoolVarP(&passwordFlag.UseUppercase, "uppercase", "u", false, "use upper case")
+	passwordCmd.Flags().BoolVarP(&passwordFlag.UseLowercase, "lowercase", "l", false, "use lower case")
+	passwordCmd.Flags().BoolVarP(&passwordFlag.UseNumber, "number", "n", false, "use number")
+	passwordCmd.Flags().BoolVarP(&passwordFlag.UseSymbol, "symbol", "s", false, "use symbol")
+	passwordCmd.Flags().IntVarP(&passwordFlag.Size, "length", "L", 8, "password length")
 }
 
 func runPassword(args []string) {
-	//fmt.Printf("Arguments : %v\n", args)
-	//fmt.Printf("UseUppercase %v\n", UseUppercase)
-	//fmt.Printf("UseLowercase %v\n", UseLowercase)
-	//fmt.Printf("UseNumber %v\n", UseNumber)
-	//fmt.Printf("UseSymbol %v\n", UseSymbol)
+	passwordFlag = passwordRunner.UpdateFlag(passwordFlag)
 
-	if !UseUppercase && !UseLowercase && !UseNumber && !UseSymbol {
-		UseUppercase = true
-		UseLowercase = true
-		UseNumber = true
-		UseSymbol = true
-	}
-
-	if len(args) == 1 {
-		i, err := strconv.Atoi(args[0])
-		if err != nil {
-			fmt.Println("Please enter a correct number")
-			os.Exit(2)
-		}
-
-		Size = i
-	}
-
-	var password = generatePassword(Size, UseLowercase, UseUppercase, UseSymbol, UseNumber)
-	fmt.Println(password)
+	fmt.Println(GeneratePassword(passwordFlag))
 
 }
 
-func makeAllCharSet(lowercaseFlag bool, uppercaseFlag bool, symbolFlag bool, numberFlag bool) string {
+func MakeAllCharSet(flag passwordRunner.PasswordFlag) string {
 	var allCharsetBuilder strings.Builder
-	if lowercaseFlag {
+	if flag.UseLowercase {
 		allCharsetBuilder.WriteString(lowerCharSet)
 	}
-	if uppercaseFlag {
+	if flag.UseUppercase {
 		allCharsetBuilder.WriteString(upperCharSet)
 	}
-	if symbolFlag {
+	if flag.UseSymbol {
 		allCharsetBuilder.WriteString(symbolCharSet)
 	}
-	if numberFlag {
+	if flag.UseNumber {
 		allCharsetBuilder.WriteString(numberSet)
 	}
 	return allCharsetBuilder.String()
 }
 
-func generatePassword(length int, lowercaseFlag bool, uppercaseFlag bool, symbolFlag bool, numberFlag bool) string {
+func GeneratePassword(flag passwordRunner.PasswordFlag) string {
 	var password strings.Builder
-	var allCharset = makeAllCharSet(lowercaseFlag, uppercaseFlag, symbolFlag, numberFlag)
+	var allCharset = MakeAllCharSet(flag)
 
-	if lowercaseFlag {
+	if flag.UseLowercase {
 		random := rand.Intn(len(lowerCharSet))
 		password.WriteString(string(lowerCharSet[random]))
 	}
-	if uppercaseFlag {
+	if flag.UseUppercase {
 		random := rand.Intn(len(upperCharSet))
 		password.WriteString(string(upperCharSet[random]))
 	}
-	if symbolFlag {
+	if flag.UseSymbol {
 		random := rand.Intn(len(symbolCharSet))
 		password.WriteString(string(symbolCharSet[random]))
 	}
-	if numberFlag {
+	if flag.UseNumber {
 		random := rand.Intn(len(numberSet))
 		password.WriteString(string(numberSet[random]))
 	}
 
-	remainingLength := length - password.Len()
+	remainingLength := flag.Size - password.Len()
 	for i := 0; i < remainingLength; i++ {
 		random := rand.Intn(len(allCharset))
 		password.WriteString(string(allCharset[random]))
