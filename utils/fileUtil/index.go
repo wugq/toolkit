@@ -10,3 +10,8 @@ func IsDirectory(directoryName string) (bool, error) {
 
 	return fileInfo.IsDir(), err
 }
+
+func GetFileSize(fileName string) (int64, error) {
+	stat, err := os.Stat(fileName)
+	return stat.Size(), err
+}
