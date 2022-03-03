@@ -48,7 +48,6 @@ func runTail(args []string) {
 	lastPosition = tailRunner.ReadFile(logFile, lastPosition, currentPosition)
 
 	if !tailCmdData.isFollow {
-		fmt.Println("!isFollow quit")
 		return
 	}
 
