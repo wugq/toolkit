@@ -3,6 +3,7 @@ package passwordRunner
 import (
 	"math/rand"
 	"strings"
+	"time"
 )
 
 type PasswordFlag struct {
@@ -50,6 +51,7 @@ func MakeAllCharSet(flag PasswordFlag) string {
 func GeneratePassword(flag PasswordFlag) string {
 	var password strings.Builder
 	var allCharset = MakeAllCharSet(flag)
+	rand.Seed(time.Now().UnixNano())
 
 	if flag.UseLowercase {
 		random := rand.Intn(len(lowerCharSet))
