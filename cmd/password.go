@@ -9,7 +9,7 @@ import (
 var passwordFlag passwordRunner.PasswordFlag
 
 var passwordCmd = &cobra.Command{
-	Use:   "password LENGTH",
+	Use:   "password",
 	Short: "Generate random password.",
 	Long:  `Generate random password.`,
 	Run: func(cmd *cobra.Command, args []string) {
