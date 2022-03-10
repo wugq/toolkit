@@ -20,7 +20,7 @@ func UpdateFile(fileName string, currentTime time.Time) {
 	if file.IsDir() {
 		fmt.Printf("Touch directory: %v\n", fileName)
 	} else {
-		fmt.Printf("Touch fileUtil: %v\n", fileName)
+		fmt.Printf("Touch file: %v\n", fileName)
 	}
 
 	err = os.Chtimes(fileName, currentTime, currentTime)
