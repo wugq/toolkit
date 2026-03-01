@@ -6,6 +6,26 @@ import (
 	"strings"
 )
 
+func PrintNS(domain string) {
+	nsRecords, err := net.LookupNS(domain)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	for _, ns := range nsRecords {
+		fmt.Printf("%v name server %v\n", domain, ns.Host)
+	}
+}
+
+func PrintCNAME(domain string) {
+	cname, err := net.LookupCNAME(domain)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Printf("%v canonical name %v\n", domain, cname)
+}
+
 func PrintMX(domain string) {
 	mxRecords, _ := net.LookupMX(domain)
 	for _, mx := range mxRecords {
