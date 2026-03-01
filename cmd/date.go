@@ -13,6 +13,8 @@ type DateCmdData struct {
 	TimeStamp int64
 	TimeText  string
 	AddTime   dateRunner.AddDate
+	Timezone  string
+	DiffText  string
 }
 
 var dateCmdData DateCmdData
@@ -58,6 +60,9 @@ func init() {
 	dateCmd.Flags().Int64VarP(&dateCmdData.TimeStamp, "timestamp", "u", 0, "Unix time")
 	dateCmd.Flags().StringVarP(&dateCmdData.TimeText, "time", "t", "", "Time text in yyyyMMdd or yyyyMMddHHmmss")
 
+	dateCmd.Flags().StringVarP(&dateCmdData.Timezone, "timezone", "z", "", "Output timezone (e.g. UTC, Asia/Tokyo)")
+	dateCmd.Flags().StringVarP(&dateCmdData.DiffText, "diff", "D", "", "Date to diff against, in yyyyMMdd or yyyyMMddHHmmss format")
+
 	dateCmd.Flags().IntVarP(&dateCmdData.AddTime.Year, "add-year", "y", 0, "Add Year")
 	dateCmd.Flags().IntVarP(&dateCmdData.AddTime.Month, "add-month", "M", 0, "Add Month")
 	dateCmd.Flags().IntVarP(&dateCmdData.AddTime.Day, "add-day", "d", 0, "Add Day")
@@ -83,6 +88,31 @@ func runDate() error {
 	tm, err = dateRunner.Add(tm, dateCmdData.AddTime)
 	if err != nil {
 		return err
+	}
+
+	if dateCmdData.Timezone != "" {
+		loc, err := time.LoadLocation(dateCmdData.Timezone)
+		if err != nil {
+			return fmt.Errorf("unknown timezone %q: %v", dateCmdData.Timezone, err)
+		}
+		tm = tm.In(loc)
+	}
+
+	if dateCmdData.DiffText != "" {
+		tm2, err := dateRunner.ParseDateText(dateCmdData.DiffText)
+		if err != nil {
+			return fmt.Errorf("invalid --diff date: %v", err)
+		}
+		diff := tm2.Sub(tm)
+		if diff < 0 {
+			diff = -diff
+		}
+		days := int(diff.Hours()) / 24
+		hours := int(diff.Hours()) % 24
+		minutes := int(diff.Minutes()) % 60
+		seconds := int(diff.Seconds()) % 60
+		fmt.Printf("Difference: %d days, %d hours, %d minutes, %d seconds\n", days, hours, minutes, seconds)
+		return nil
 	}
 
 	fmt.Printf("Date:      %v\n", tm.Format(TimeFormat))

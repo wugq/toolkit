@@ -12,6 +12,7 @@ import (
 type DigCmdData struct {
 	RecordType string
 	Verbose    bool
+	Resolver   string
 }
 
 var digCmdData DigCmdData
@@ -42,24 +43,26 @@ func init() {
 	rootCmd.AddCommand(digCmd)
 	digCmd.Flags().StringVarP(&digCmdData.RecordType, "type", "t", "", "record type to query: A, CNAME, MX, NS, TXT")
 	digCmd.Flags().BoolVarP(&digCmdData.Verbose, "verbose", "v", false, "also show MX, NS, and TXT records")
+	digCmd.Flags().StringVarP(&digCmdData.Resolver, "resolver", "r", "", "DNS server to use (e.g. 8.8.8.8)")
 }
 
 func runDig(args []string) {
 	domain := digRunner.FormatDomain(args[0])
 	recordType := strings.ToUpper(digCmdData.RecordType)
+	resolver := digRunner.NewResolver(digCmdData.Resolver)
 
 	if recordType != "" {
 		switch recordType {
 		case "A":
-			digRunner.PrintAddress(domain)
+			digRunner.PrintAddress(domain, resolver)
 		case "CNAME":
-			digRunner.PrintCNAME(domain)
+			digRunner.PrintCNAME(domain, resolver)
 		case "MX":
-			digRunner.PrintMX(domain)
+			digRunner.PrintMX(domain, resolver)
 		case "NS":
-			digRunner.PrintNS(domain)
+			digRunner.PrintNS(domain, resolver)
 		case "TXT":
-			digRunner.PrintTXT(domain)
+			digRunner.PrintTXT(domain, resolver)
 		default:
 			fmt.Printf("Unsupported record type: %s\nSupported types: A, CNAME, MX, NS, TXT\n", digCmdData.RecordType)
 			os.Exit(2)
@@ -67,10 +70,10 @@ func runDig(args []string) {
 		return
 	}
 
-	digRunner.PrintAddress(domain)
+	digRunner.PrintAddress(domain, resolver)
 	if digCmdData.Verbose {
-		digRunner.PrintMX(domain)
-		digRunner.PrintNS(domain)
-		digRunner.PrintTXT(domain)
+		digRunner.PrintMX(domain, resolver)
+		digRunner.PrintNS(domain, resolver)
+		digRunner.PrintTXT(domain, resolver)
 	}
 }

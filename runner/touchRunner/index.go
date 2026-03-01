@@ -2,7 +2,6 @@ package touchRunner
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -28,7 +27,7 @@ func UpdateFile(fileName string, currentTime time.Time) {
 }
 
 func UpdateDirectoryRecursively(dirName string, currentTime time.Time) {
-	files, err := ioutil.ReadDir(dirName)
+	files, err := os.ReadDir(dirName)
 	if err != nil {
 		log.Fatal(err)
 	}

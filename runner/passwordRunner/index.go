@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+var rng = rand.New(rand.NewSource(time.Now().UnixNano())) //nolint:gosec
+
 type PasswordFlag struct {
 	UseUppercase bool
 	UseLowercase bool
@@ -15,7 +17,7 @@ type PasswordFlag struct {
 }
 
 var (
-	lowerCharSet  = "abcdedfghijklmnopqrst"
+	lowerCharSet  = "abcdefghijklmnopqrstuvwxyz"
 	upperCharSet  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	symbolCharSet = "!@#$%&*"
 	numberSet     = "0123456789"
@@ -51,32 +53,26 @@ func MakeAllCharSet(flag PasswordFlag) string {
 func GeneratePassword(flag PasswordFlag) string {
 	var password strings.Builder
 	var allCharset = MakeAllCharSet(flag)
-	rand.Seed(time.Now().UnixNano())
 
 	if flag.UseLowercase {
-		random := rand.Intn(len(lowerCharSet))
-		password.WriteString(string(lowerCharSet[random]))
+		password.WriteString(string(lowerCharSet[rng.Intn(len(lowerCharSet))]))
 	}
 	if flag.UseUppercase {
-		random := rand.Intn(len(upperCharSet))
-		password.WriteString(string(upperCharSet[random]))
+		password.WriteString(string(upperCharSet[rng.Intn(len(upperCharSet))]))
 	}
 	if flag.UseSymbol {
-		random := rand.Intn(len(symbolCharSet))
-		password.WriteString(string(symbolCharSet[random]))
+		password.WriteString(string(symbolCharSet[rng.Intn(len(symbolCharSet))]))
 	}
 	if flag.UseNumber {
-		random := rand.Intn(len(numberSet))
-		password.WriteString(string(numberSet[random]))
+		password.WriteString(string(numberSet[rng.Intn(len(numberSet))]))
 	}
 
 	remainingLength := flag.Size - password.Len()
 	for i := 0; i < remainingLength; i++ {
-		random := rand.Intn(len(allCharset))
-		password.WriteString(string(allCharset[random]))
+		password.WriteString(string(allCharset[rng.Intn(len(allCharset))]))
 	}
 	inRune := []rune(password.String())
-	rand.Shuffle(len(inRune), func(i, j int) {
+	rng.Shuffle(len(inRune), func(i, j int) {
 		inRune[i], inRune[j] = inRune[j], inRune[i]
 	})
 	return string(inRune)

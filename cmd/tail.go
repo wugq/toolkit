@@ -11,6 +11,7 @@ import (
 
 type TailCmdData struct {
 	isFollow bool
+	lines    int
 }
 
 var tailCmdData TailCmdData
@@ -38,18 +39,23 @@ func init() {
 	rootCmd.AddCommand(tailCmd)
 
 	tailCmd.Flags().BoolVarP(&tailCmdData.isFollow, "follow", "f", false, "Continue looking for new lines")
+	tailCmd.Flags().IntVarP(&tailCmdData.lines, "lines", "n", 10, "Number of lines to show")
 }
 
 func runTail(args []string) {
 	logFile := args[0]
-	const buffSize = 100
+
+	lastPosition, err := tailRunner.SeekLines(logFile, tailCmdData.lines)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
 	currentPosition, err := fileUtil.GetFileSize(logFile)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	lastPosition := currentPosition - buffSize
 
 	lastPosition = tailRunner.ReadFile(logFile, lastPosition, currentPosition)
 
@@ -58,7 +64,7 @@ func runTail(args []string) {
 	}
 
 	c := time.Tick(100 * time.Millisecond)
-	for _ = range c {
+	for range c {
 		newPosition, err := fileUtil.GetFileSize(logFile)
 		if err == nil {
 			currentPosition = newPosition
