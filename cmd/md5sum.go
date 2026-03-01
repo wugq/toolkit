@@ -5,8 +5,8 @@ import (
 	"github.com/spf13/cobra"
 	"os"
 	"toolkit/runner/md5sum"
-	"toolkit/utils/fileutil"
-	"toolkit/utils/stdinutil"
+	"toolkit/util/file"
+	"toolkit/util/stdin"
 )
 
 type Md5sumCmdData struct {
@@ -34,7 +34,7 @@ Examples:
 			fmt.Println("Please process one file at a time.")
 			os.Exit(1)
 		}
-		if len(args) == 0 && md5sumCmdData.text == "" && !stdinutil.IsPiped() {
+		if len(args) == 0 && md5sumCmdData.text == "" && !stdin.IsPiped() {
 			fmt.Println("Please provide a file, use -t, or pipe input.")
 			os.Exit(2)
 		}
@@ -52,7 +52,7 @@ func init() {
 func runMd5Sum(args []string) {
 	if len(args) == 1 {
 		userInput := args[0]
-		isFile, err := fileutil.IsFile(userInput)
+		isFile, err := file.IsFile(userInput)
 		if !isFile || err != nil {
 			fmt.Println("File is incorrect.")
 		}
@@ -70,8 +70,8 @@ func runMd5Sum(args []string) {
 			return
 		}
 		fmt.Printf("%v %v", checksum, md5sumCmdData.text)
-	} else if stdinutil.IsPiped() {
-		data, err := stdinutil.ReadAll()
+	} else if stdin.IsPiped() {
+		data, err := stdin.ReadAll()
 		if err != nil {
 			fmt.Printf("error reading stdin: %v\n", err)
 			os.Exit(1)

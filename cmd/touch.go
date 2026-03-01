@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 	"toolkit/runner/touch"
-	"toolkit/utils/fileutil"
+	"toolkit/util/file"
 )
 
 type TouchCmdData struct {
@@ -51,7 +51,7 @@ func runTouch(args []string) {
 		fmt.Printf("File not found : %v\n", filename)
 	}
 
-	isDir, _ := fileutil.IsDirectory(filename)
+	isDir, _ := file.IsDirectory(filename)
 	if isDir && touchCmdData.isRecursive {
 		results, err := touch.UpdateDirectoryRecursively(filename, currentTime)
 		if err != nil {

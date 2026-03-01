@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 	"toolkit/runner/tail"
-	"toolkit/utils/fileutil"
+	"toolkit/util/file"
 )
 
 type TailCmdData struct {
@@ -51,7 +51,7 @@ func runTail(args []string) {
 		os.Exit(1)
 	}
 
-	currentPosition, err := fileutil.GetFileSize(logFile)
+	currentPosition, err := file.GetFileSize(logFile)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -66,7 +66,7 @@ func runTail(args []string) {
 
 	c := time.Tick(100 * time.Millisecond)
 	for range c {
-		newPosition, err := fileutil.GetFileSize(logFile)
+		newPosition, err := file.GetFileSize(logFile)
 		if err == nil {
 			currentPosition = newPosition
 		}

@@ -1,4 +1,4 @@
-package stdinutil
+package stdin
 
 import (
 	"io"

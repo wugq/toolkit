@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"toolkit/runner/json"
-	"toolkit/utils/stdinutil"
+	"toolkit/util/stdin"
 
 	"github.com/spf13/cobra"
 )
@@ -28,7 +28,7 @@ Examples:
   toolkit json -t '{"a":1,"b":2}'
   type data.json | toolkit json`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) == 0 && jsonCmdData.text == "" && !stdinutil.IsPiped() {
+		if len(args) == 0 && jsonCmdData.text == "" && !stdin.IsPiped() {
 			fmt.Println("Please provide a file path, use -t, or pipe input.")
 			os.Exit(2)
 		}
@@ -46,9 +46,9 @@ func runJson(args []string) {
 
 	if jsonCmdData.text != "" {
 		input = []byte(jsonCmdData.text)
-	} else if stdinutil.IsPiped() {
+	} else if stdin.IsPiped() {
 		var err error
-		input, err = stdinutil.ReadAll()
+		input, err = stdin.ReadAll()
 		if err != nil {
 			fmt.Printf("error reading stdin: %v\n", err)
 			os.Exit(1)

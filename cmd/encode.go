@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 	"toolkit/runner/encode"
-	"toolkit/utils/stdinutil"
+	"toolkit/util/stdin"
 
 	"github.com/spf13/cobra"
 )
@@ -31,7 +31,7 @@ Examples:
   toolkit encode -u "hello world"
   echo hello | toolkit encode -b`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) == 0 && !stdinutil.IsPiped() {
+		if len(args) == 0 && !stdin.IsPiped() {
 			fmt.Println("Please provide a string to encode or pipe input.")
 			os.Exit(2)
 		}
@@ -43,7 +43,7 @@ Examples:
 		if len(args) == 1 {
 			text = args[0]
 		} else {
-			data, err := stdinutil.ReadAll()
+			data, err := stdin.ReadAll()
 			if err != nil {
 				fmt.Printf("error reading stdin: %v\n", err)
 				os.Exit(1)
