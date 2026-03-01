@@ -1,4 +1,4 @@
-package touchRunner
+package touchrunner
 
 import (
 	"os"

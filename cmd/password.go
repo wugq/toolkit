@@ -3,10 +3,10 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"toolkit/runner/passwordRunner"
+	"toolkit/runner/passwordrunner"
 )
 
-var passwordFlag passwordRunner.PasswordFlag
+var passwordFlag passwordrunner.PasswordFlag
 
 var passwordCmd = &cobra.Command{
 	Use:   "password",
@@ -41,8 +41,8 @@ func init() {
 }
 
 func runPassword() {
-	passwordFlag = passwordRunner.UpdateFlag(passwordFlag)
+	passwordFlag = passwordrunner.UpdateFlag(passwordFlag)
 
-	password := passwordRunner.GeneratePassword(passwordFlag)
+	password := passwordrunner.GeneratePassword(passwordFlag)
 	fmt.Println(password)
 }

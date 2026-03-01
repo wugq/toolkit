@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"toolkit/runner/envRunner"
+	"toolkit/runner/envrunner"
 
 	"github.com/spf13/cobra"
 )
@@ -34,7 +34,7 @@ func init() {
 }
 
 func runEnv() {
-	for _, line := range envRunner.Env(envCmdData.pretty) {
+	for _, line := range envrunner.Env(envCmdData.pretty) {
 		fmt.Println(line)
 	}
 }

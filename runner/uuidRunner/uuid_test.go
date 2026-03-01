@@ -1,4 +1,4 @@
-package uuidRunner
+package uuidrunner
 
 import (
 	"regexp"

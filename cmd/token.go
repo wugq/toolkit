@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"toolkit/runner/tokenRunner"
+	"toolkit/runner/tokenrunner"
 
 	"github.com/spf13/cobra"
 )
@@ -35,7 +35,7 @@ func init() {
 }
 
 func runToken() {
-	token, err := tokenRunner.Generate(tokenCmdData.length)
+	token, err := tokenrunner.Generate(tokenCmdData.length)
 	if err != nil {
 		fmt.Printf("error: %v\n", err)
 		os.Exit(1)

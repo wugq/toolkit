@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"toolkit/runner/jsonRunner"
-	"toolkit/utils/stdinUtil"
+	"toolkit/runner/jsonrunner"
+	"toolkit/utils/stdinutil"
 
 	"github.com/spf13/cobra"
 )
@@ -28,7 +28,7 @@ Examples:
   toolkit json -t '{"a":1,"b":2}'
   type data.json | toolkit json`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) == 0 && jsonCmdData.text == "" && !stdinUtil.IsPiped() {
+		if len(args) == 0 && jsonCmdData.text == "" && !stdinutil.IsPiped() {
 			fmt.Println("Please provide a file path, use -t, or pipe input.")
 			os.Exit(2)
 		}
@@ -46,9 +46,9 @@ func runJson(args []string) {
 
 	if jsonCmdData.text != "" {
 		input = []byte(jsonCmdData.text)
-	} else if stdinUtil.IsPiped() {
+	} else if stdinutil.IsPiped() {
 		var err error
-		input, err = stdinUtil.ReadAll()
+		input, err = stdinutil.ReadAll()
 		if err != nil {
 			fmt.Printf("error reading stdin: %v\n", err)
 			os.Exit(1)
@@ -62,7 +62,7 @@ func runJson(args []string) {
 		}
 	}
 
-	result, err := jsonRunner.PrettyPrint(input)
+	result, err := jsonrunner.PrettyPrint(input)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)

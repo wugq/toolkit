@@ -1,4 +1,4 @@
-package digRunner
+package digrunner
 
 import (
 	"net"

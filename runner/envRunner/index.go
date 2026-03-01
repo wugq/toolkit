@@ -1,4 +1,4 @@
-package envRunner
+package envrunner
 
 import (
 	"fmt"

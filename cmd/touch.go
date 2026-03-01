@@ -6,8 +6,8 @@ import (
 	"github.com/spf13/cobra"
 	"os"
 	"time"
-	"toolkit/runner/touchRunner"
-	"toolkit/utils/fileUtil"
+	"toolkit/runner/touchrunner"
+	"toolkit/utils/fileutil"
 )
 
 type TouchCmdData struct {
@@ -51,9 +51,9 @@ func runTouch(args []string) {
 		fmt.Printf("File not found : %v\n", filename)
 	}
 
-	isDir, _ := fileUtil.IsDirectory(filename)
+	isDir, _ := fileutil.IsDirectory(filename)
 	if isDir && touchCmdData.isRecursive {
-		results, err := touchRunner.UpdateDirectoryRecursively(filename, currentTime)
+		results, err := touchrunner.UpdateDirectoryRecursively(filename, currentTime)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -66,7 +66,7 @@ func runTouch(args []string) {
 			}
 		}
 	}
-	r, err := touchRunner.UpdateFile(filename, currentTime)
+	r, err := touchrunner.UpdateFile(filename, currentTime)
 	if err != nil {
 		fmt.Println(err)
 		return

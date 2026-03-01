@@ -1,4 +1,4 @@
-package portRunner
+package portrunner
 
 import (
 	"net"

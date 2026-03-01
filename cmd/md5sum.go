@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"os"
-	"toolkit/runner/md5sumRunner"
-	"toolkit/utils/fileUtil"
-	"toolkit/utils/stdinUtil"
+	"toolkit/runner/md5sumrunner"
+	"toolkit/utils/fileutil"
+	"toolkit/utils/stdinutil"
 )
 
 type Md5sumCmdData struct {
@@ -34,7 +34,7 @@ Examples:
 			fmt.Println("Please process one file at a time.")
 			os.Exit(1)
 		}
-		if len(args) == 0 && md5sumCmdData.text == "" && !stdinUtil.IsPiped() {
+		if len(args) == 0 && md5sumCmdData.text == "" && !stdinutil.IsPiped() {
 			fmt.Println("Please provide a file, use -t, or pipe input.")
 			os.Exit(2)
 		}
@@ -52,31 +52,31 @@ func init() {
 func runMd5Sum(args []string) {
 	if len(args) == 1 {
 		userInput := args[0]
-		isFile, err := fileUtil.IsFile(userInput)
+		isFile, err := fileutil.IsFile(userInput)
 		if !isFile || err != nil {
 			fmt.Println("File is incorrect.")
 		}
 
-		checksum, err := md5sumRunner.CheckFile(userInput, md5sumCmdData.algo)
+		checksum, err := md5sumrunner.CheckFile(userInput, md5sumCmdData.algo)
 		if err != nil {
 			fmt.Printf("error: %v", err)
 			return
 		}
 		fmt.Printf("%v %v", checksum, userInput)
 	} else if md5sumCmdData.text != "" {
-		checksum, err := md5sumRunner.CheckText(md5sumCmdData.text, md5sumCmdData.algo)
+		checksum, err := md5sumrunner.CheckText(md5sumCmdData.text, md5sumCmdData.algo)
 		if err != nil {
 			fmt.Printf("error: %v", err)
 			return
 		}
 		fmt.Printf("%v %v", checksum, md5sumCmdData.text)
-	} else if stdinUtil.IsPiped() {
-		data, err := stdinUtil.ReadAll()
+	} else if stdinutil.IsPiped() {
+		data, err := stdinutil.ReadAll()
 		if err != nil {
 			fmt.Printf("error reading stdin: %v\n", err)
 			os.Exit(1)
 		}
-		checksum, err := md5sumRunner.CheckText(string(data), md5sumCmdData.algo)
+		checksum, err := md5sumrunner.CheckText(string(data), md5sumCmdData.algo)
 		if err != nil {
 			fmt.Printf("error: %v", err)
 			return

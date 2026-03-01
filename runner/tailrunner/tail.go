@@ -1,4 +1,4 @@
-package tailRunner
+package tailrunner
 
 import (
 	"bytes"

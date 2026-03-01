@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"toolkit/runner/encodeRunner"
-	"toolkit/utils/stdinUtil"
+	"toolkit/runner/encoderunner"
+	"toolkit/utils/stdinutil"
 
 	"github.com/spf13/cobra"
 )
@@ -31,7 +31,7 @@ Examples:
   toolkit encode -u "hello world"
   echo hello | toolkit encode -b`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) == 0 && !stdinUtil.IsPiped() {
+		if len(args) == 0 && !stdinutil.IsPiped() {
 			fmt.Println("Please provide a string to encode or pipe input.")
 			os.Exit(2)
 		}
@@ -43,7 +43,7 @@ Examples:
 		if len(args) == 1 {
 			text = args[0]
 		} else {
-			data, err := stdinUtil.ReadAll()
+			data, err := stdinutil.ReadAll()
 			if err != nil {
 				fmt.Printf("error reading stdin: %v\n", err)
 				os.Exit(1)
@@ -62,8 +62,8 @@ func init() {
 
 func runEncode(text string) {
 	if encodeCmdData.useBase64 {
-		fmt.Println(encodeRunner.Base64Encode(text))
+		fmt.Println(encoderunner.Base64Encode(text))
 	} else if encodeCmdData.useURL {
-		fmt.Println(encodeRunner.URLEncode(text))
+		fmt.Println(encoderunner.URLEncode(text))
 	}
 }

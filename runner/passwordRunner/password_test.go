@@ -1,4 +1,4 @@
-package passwordRunner
+package passwordrunner
 
 import (
 	"strings"

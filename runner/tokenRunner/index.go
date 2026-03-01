@@ -1,4 +1,4 @@
-package tokenRunner
+package tokenrunner
 
 import (
 	"crypto/rand"

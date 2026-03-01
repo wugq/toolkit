@@ -1,4 +1,4 @@
-package stdinUtil
+package stdinutil
 
 import (
 	"testing"

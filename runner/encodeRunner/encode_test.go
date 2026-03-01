@@ -1,4 +1,4 @@
-package encodeRunner
+package encoderunner
 
 import (
 	"testing"

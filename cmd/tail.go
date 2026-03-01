@@ -5,8 +5,8 @@ import (
 	"github.com/spf13/cobra"
 	"os"
 	"time"
-	"toolkit/runner/tailRunner"
-	"toolkit/utils/fileUtil"
+	"toolkit/runner/tailrunner"
+	"toolkit/utils/fileutil"
 )
 
 type TailCmdData struct {
@@ -45,19 +45,19 @@ func init() {
 func runTail(args []string) {
 	logFile := args[0]
 
-	lastPosition, err := tailRunner.SeekLines(logFile, tailCmdData.lines)
+	lastPosition, err := tailrunner.SeekLines(logFile, tailCmdData.lines)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	currentPosition, err := fileUtil.GetFileSize(logFile)
+	currentPosition, err := fileutil.GetFileSize(logFile)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	content, lastPosition := tailRunner.ReadFile(logFile, lastPosition, currentPosition)
+	content, lastPosition := tailrunner.ReadFile(logFile, lastPosition, currentPosition)
 	fmt.Print(content)
 
 	if !tailCmdData.isFollow {
@@ -66,7 +66,7 @@ func runTail(args []string) {
 
 	c := time.Tick(100 * time.Millisecond)
 	for range c {
-		newPosition, err := fileUtil.GetFileSize(logFile)
+		newPosition, err := fileutil.GetFileSize(logFile)
 		if err == nil {
 			currentPosition = newPosition
 		}
@@ -74,7 +74,7 @@ func runTail(args []string) {
 		if lastPosition == currentPosition {
 			continue
 		}
-		content, lastPosition = tailRunner.ReadFile(logFile, lastPosition, currentPosition)
+		content, lastPosition = tailrunner.ReadFile(logFile, lastPosition, currentPosition)
 		fmt.Print(content)
 	}
 }

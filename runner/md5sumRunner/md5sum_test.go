@@ -1,4 +1,4 @@
-package md5sumRunner
+package md5sumrunner
 
 import (
 	"encoding/hex"

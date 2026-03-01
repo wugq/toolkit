@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"toolkit/runner/encodeRunner"
-	"toolkit/utils/stdinUtil"
+	"toolkit/runner/encoderunner"
+	"toolkit/utils/stdinutil"
 
 	"github.com/spf13/cobra"
 )
@@ -31,7 +31,7 @@ Examples:
   toolkit decode -u "hello+world"
   echo aGVsbG8= | toolkit decode -b`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) == 0 && !stdinUtil.IsPiped() {
+		if len(args) == 0 && !stdinutil.IsPiped() {
 			fmt.Println("Please provide a string to decode or pipe input.")
 			os.Exit(2)
 		}
@@ -43,7 +43,7 @@ Examples:
 		if len(args) == 1 {
 			text = args[0]
 		} else {
-			data, err := stdinUtil.ReadAll()
+			data, err := stdinutil.ReadAll()
 			if err != nil {
 				fmt.Printf("error reading stdin: %v\n", err)
 				os.Exit(1)
@@ -62,14 +62,14 @@ func init() {
 
 func runDecode(text string) {
 	if decodeCmdData.useBase64 {
-		result, err := encodeRunner.Base64Decode(text)
+		result, err := encoderunner.Base64Decode(text)
 		if err != nil {
 			fmt.Printf("error: %v\n", err)
 			os.Exit(1)
 		}
 		fmt.Println(result)
 	} else if decodeCmdData.useURL {
-		result, err := encodeRunner.URLDecode(text)
+		result, err := encoderunner.URLDecode(text)
 		if err != nil {
 			fmt.Printf("error: %v\n", err)
 			os.Exit(1)

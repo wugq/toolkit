@@ -1,4 +1,4 @@
-package ipRunner
+package iprunner
 
 import (
 	"fmt"

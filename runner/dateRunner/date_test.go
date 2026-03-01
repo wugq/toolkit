@@ -1,4 +1,4 @@
-package dateRunner
+package daterunner
 
 import (
 	"testing"

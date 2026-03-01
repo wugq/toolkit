@@ -1,4 +1,4 @@
-package jsonRunner
+package jsonrunner
 
 import (
 	"strings"
