@@ -22,7 +22,24 @@ const TimeFormat = time.RFC3339
 var dateCmd = &cobra.Command{
 	Use:   "date",
 	Short: "Show date.",
-	Long:  `Show date.`,
+	Long: `Show the current date and Unix timestamp, or convert a given time.
+
+Input (pick one):
+  -u / --timestamp  Convert a Unix epoch timestamp
+  -t / --time       Parse a date string in yyyyMMdd or yyyyMMddHHmmss format
+
+Date arithmetic (can be combined with any input):
+  -y / --add-year    Add N years
+  -M / --add-month   Add N months
+  -d / --add-day     Add N days
+  -H / --add-hour    Add N hours
+  -m / --add-minute  Add N minutes
+  -s / --add-second  Add N seconds
+
+Examples:
+  toolkit date
+  toolkit date -u 1700000000
+  toolkit date -t 20240101 -d 7`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if dateCmdData.TimeStamp != 0 && dateCmdData.TimeText != "" {
 			fmt.Println("-timestamp and -time can not be used at the same time")

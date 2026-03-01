@@ -19,7 +19,13 @@ var touchCmdData TouchCmdData
 var touchCmd = &cobra.Command{
 	Use:   "touch FILE",
 	Short: "Update the modification time of a file or directory.",
-	Long:  `Update the modification time of a file or directory, like touch in Linux.`,
+	Long: `Update the modification time of a file or directory to the current time.
+
+  -r / --recursive  Also update all files inside a directory recursively
+
+Examples:
+  toolkit touch ./file.txt
+  toolkit touch -r ./some-dir`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) != 1 {
 			err := cmd.Help()

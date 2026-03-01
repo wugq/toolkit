@@ -11,7 +11,20 @@ var passwordFlag passwordRunner.PasswordFlag
 var passwordCmd = &cobra.Command{
 	Use:   "password",
 	Short: "Generate random password.",
-	Long:  `Generate random password.`,
+	Long: `Generate a random password.
+
+By default uses all character sets (uppercase, lowercase, numbers, symbols).
+Specify one or more flags to restrict to those sets only:
+  -u / --uppercase  Include uppercase letters (A-Z)
+  -l / --lowercase  Include lowercase letters (a-z)
+  -n / --number     Include digits (0-9)
+  -s / --symbol     Include symbols
+  -L / --length     Password length (default: 8)
+
+Examples:
+  toolkit generate password
+  toolkit generate password -u -l -n -L 16
+  toolkit generate password -n -s -L 12`,
 	Run: func(cmd *cobra.Command, args []string) {
 		runPassword()
 	},

@@ -14,9 +14,19 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "toolkit",
 	Short: "WuGQ's toolkit",
-	Long: `WuGQ's toolkit
+	Long: `WuGQ's toolkit — a collection of everyday CLI utilities.
 
-My toolbox for daily routine. `,
+Commands:
+  date    Show or convert dates and timestamps, with date arithmetic
+  dig     DNS lookup for A, CNAME, MX, NS, and TXT records
+  md5sum  Compute the MD5 checksum of a file or text string
+  tail    Print the end of a file, with optional follow mode
+  touch   Update the modification time of a file or directory
+
+  generate password  Generate a random password
+  generate uuid      Generate a random UUID
+
+Run 'toolkit <command> --help' for details on each command.`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

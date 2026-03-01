@@ -16,7 +16,14 @@ var md5sumCmdData Md5sumCmdData
 var md5sumCmd = &cobra.Command{
 	Use:   "md5sum FILE",
 	Short: "check md5sum of a file or string.",
-	Long:  `check md5sum of a file or string.`,
+	Long: `Compute the MD5 checksum of a file or a text string.
+
+Provide a file path as an argument, or use -t to hash a string directly:
+  -t / --text  Compute the checksum of the given text string
+
+Examples:
+  toolkit md5sum ./file.txt
+  toolkit md5sum -t "hello world"`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 1 {
 			fmt.Println("Please process one file at a time.")

@@ -18,7 +18,13 @@ var tailCmdData TailCmdData
 var tailCmd = &cobra.Command{
 	Use:   "tail",
 	Short: "Tail a file.",
-	Long:  `Tail a file.`,
+	Long: `Print the last portion of a file.
+
+  -f / --follow  Keep watching the file and print new lines as they appear
+
+Examples:
+  toolkit tail ./app.log
+  toolkit tail -f ./app.log`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) != 1 {
 			fmt.Println("Please specify a file to tail")

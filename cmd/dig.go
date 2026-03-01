@@ -19,7 +19,16 @@ var digCmdData DigCmdData
 var digCmd = &cobra.Command{
 	Use:   "dig domain",
 	Short: "DNS lookup.",
-	Long:  `DNS lookup. Shows A and CNAME by default. Use -v for MX, NS, TXT. Use -t to query a specific type.`,
+	Long: `Look up DNS records for a domain.
+
+By default shows A and CNAME records. Use flags to see more:
+  -v / --verbose  Also show MX, NS, and TXT records
+  -t / --type     Query a specific record type: A, CNAME, MX, NS, TXT
+
+Examples:
+  toolkit dig example.com
+  toolkit dig example.com -v
+  toolkit dig example.com -t MX`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) != 1 {
 			fmt.Println("Please enter a domain.")
