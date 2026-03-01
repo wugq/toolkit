@@ -2,7 +2,6 @@ package digRunner
 
 import (
 	"context"
-	"fmt"
 	"net"
 	"strings"
 )
@@ -24,57 +23,57 @@ func NewResolver(server string) *net.Resolver {
 	}
 }
 
-func PrintNS(domain string, r *net.Resolver) {
-	nsRecords, err := r.LookupNS(context.Background(), domain)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	for _, ns := range nsRecords {
-		fmt.Printf("%v name server %v\n", domain, ns.Host)
-	}
+func NS(domain string, r *net.Resolver) ([]*net.NS, error) {
+	return r.LookupNS(context.Background(), domain)
 }
 
-func PrintCNAME(domain string, r *net.Resolver) {
-	cname, err := r.LookupCNAME(context.Background(), domain)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Printf("%v canonical name %v\n", domain, cname)
+func CNAME(domain string, r *net.Resolver) (string, error) {
+	return r.LookupCNAME(context.Background(), domain)
 }
 
-func PrintMX(domain string, r *net.Resolver) {
-	mxRecords, _ := r.LookupMX(context.Background(), domain)
-	for _, mx := range mxRecords {
-		fmt.Printf("%v mail is handled by %v %v\n", domain, mx.Pref, mx.Host)
-	}
+func MX(domain string, r *net.Resolver) ([]*net.MX, error) {
+	return r.LookupMX(context.Background(), domain)
 }
 
-func PrintTXT(domain string, r *net.Resolver) {
-	txtRecords, _ := r.LookupTXT(context.Background(), domain)
-	for _, txt := range txtRecords {
-		fmt.Printf("%v has TXT record %v\n", domain, txt)
-	}
+func TXT(domain string, r *net.Resolver) ([]string, error) {
+	return r.LookupTXT(context.Background(), domain)
 }
 
-func PrintAddress(domain string, r *net.Resolver) {
-	cname, err := r.LookupCNAME(context.Background(), domain)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+// AliasEntry holds one step in a CNAME alias chain.
+type AliasEntry struct {
+	From string
+	To   string
+}
 
-	if cname != domain {
-		fmt.Printf("%v is an alias for %v\n", domain, cname)
-		PrintAddress(cname, r)
-		return
-	}
+// AddressResult holds the resolved address information for a domain.
+type AddressResult struct {
+	Aliases []AliasEntry
+	Final   string
+	IPs     []net.IP
+}
 
-	ipRecords, _ := r.LookupIP(context.Background(), "ip", domain)
-	for _, ip := range ipRecords {
-		fmt.Printf("%v has address %v\n", domain, ip)
+// Address resolves a domain, following CNAME aliases, and returns all IPs.
+func Address(domain string, r *net.Resolver) (AddressResult, error) {
+	var result AddressResult
+	current := domain
+	for {
+		cname, err := r.LookupCNAME(context.Background(), current)
+		if err != nil {
+			return AddressResult{}, err
+		}
+		if cname == current {
+			result.Final = current
+			break
+		}
+		result.Aliases = append(result.Aliases, AliasEntry{From: current, To: cname})
+		current = cname
+		if len(result.Aliases) > 20 {
+			result.Final = current
+			break
+		}
 	}
+	result.IPs, _ = r.LookupIP(context.Background(), "ip", result.Final)
+	return result, nil
 }
 
 func FormatDomain(domain string) string {

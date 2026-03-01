@@ -31,7 +31,16 @@ Examples:
 			os.Exit(2)
 		}
 		timeout := time.Duration(portCmdData.timeout) * time.Second
-		portRunner.Check(args[0], args[1], timeout)
+		open, err := portRunner.Check(args[0], args[1], timeout)
+		if err != nil {
+			fmt.Printf("error: %v\n", err)
+			os.Exit(1)
+		}
+		if open {
+			fmt.Printf("Port %s on %s is open\n", args[1], args[0])
+		} else {
+			fmt.Printf("Port %s on %s is closed or unreachable\n", args[1], args[0])
+		}
 	},
 }
 

@@ -1,18 +1,17 @@
 package portRunner
 
 import (
-	"fmt"
 	"net"
 	"time"
 )
 
-func Check(host, port string, timeout time.Duration) {
+// Check returns true if the TCP port is open, false if closed or unreachable.
+func Check(host, port string, timeout time.Duration) (bool, error) {
 	addr := net.JoinHostPort(host, port)
 	conn, err := net.DialTimeout("tcp", addr, timeout)
 	if err != nil {
-		fmt.Printf("Port %s on %s is closed or unreachable\n", port, host)
-		return
+		return false, nil
 	}
 	conn.Close()
-	fmt.Printf("Port %s on %s is open\n", port, host)
+	return true, nil
 }

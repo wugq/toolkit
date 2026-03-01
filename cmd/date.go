@@ -103,15 +103,8 @@ func runDate() error {
 		if err != nil {
 			return fmt.Errorf("invalid --diff date: %v", err)
 		}
-		diff := tm2.Sub(tm)
-		if diff < 0 {
-			diff = -diff
-		}
-		days := int(diff.Hours()) / 24
-		hours := int(diff.Hours()) % 24
-		minutes := int(diff.Minutes()) % 60
-		seconds := int(diff.Seconds()) % 60
-		fmt.Printf("Difference: %d days, %d hours, %d minutes, %d seconds\n", days, hours, minutes, seconds)
+		diff := dateRunner.Diff(tm, tm2)
+		fmt.Printf("Difference: %d days, %d hours, %d minutes, %d seconds\n", diff.Days, diff.Hours, diff.Minutes, diff.Seconds)
 		return nil
 	}
 

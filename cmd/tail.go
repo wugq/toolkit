@@ -57,7 +57,8 @@ func runTail(args []string) {
 		os.Exit(1)
 	}
 
-	lastPosition = tailRunner.ReadFile(logFile, lastPosition, currentPosition)
+	content, lastPosition := tailRunner.ReadFile(logFile, lastPosition, currentPosition)
+	fmt.Print(content)
 
 	if !tailCmdData.isFollow {
 		return
@@ -73,6 +74,7 @@ func runTail(args []string) {
 		if lastPosition == currentPosition {
 			continue
 		}
-		lastPosition = tailRunner.ReadFile(logFile, lastPosition, currentPosition)
+		content, lastPosition = tailRunner.ReadFile(logFile, lastPosition, currentPosition)
+		fmt.Print(content)
 	}
 }

@@ -6,6 +6,28 @@ import (
 	"time"
 )
 
+// DateDiff holds the decomposed absolute difference between two times.
+type DateDiff struct {
+	Days    int
+	Hours   int
+	Minutes int
+	Seconds int
+}
+
+// Diff returns the absolute difference between two times decomposed into days, hours, minutes, seconds.
+func Diff(t1, t2 time.Time) DateDiff {
+	d := t2.Sub(t1)
+	if d < 0 {
+		d = -d
+	}
+	return DateDiff{
+		Days:    int(d.Hours()) / 24,
+		Hours:   int(d.Hours()) % 24,
+		Minutes: int(d.Minutes()) % 60,
+		Seconds: int(d.Seconds()) % 60,
+	}
+}
+
 type AddDate struct {
 	Year   int
 	Month  int

@@ -1,10 +1,9 @@
 package cmd
 
 import (
-	"crypto/rand"
-	"encoding/hex"
 	"fmt"
 	"os"
+	"toolkit/runner/tokenRunner"
 
 	"github.com/spf13/cobra"
 )
@@ -36,10 +35,10 @@ func init() {
 }
 
 func runToken() {
-	b := make([]byte, tokenCmdData.length)
-	if _, err := rand.Read(b); err != nil {
+	token, err := tokenRunner.Generate(tokenCmdData.length)
+	if err != nil {
 		fmt.Printf("error: %v\n", err)
 		os.Exit(1)
 	}
-	fmt.Println(hex.EncodeToString(b))
+	fmt.Println(token)
 }

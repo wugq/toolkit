@@ -53,7 +53,27 @@ func runTouch(args []string) {
 
 	isDir, _ := fileUtil.IsDirectory(filename)
 	if isDir && touchCmdData.isRecursive {
-		touchRunner.UpdateDirectoryRecursively(filename, currentTime)
+		results, err := touchRunner.UpdateDirectoryRecursively(filename, currentTime)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		for _, r := range results {
+			if r.IsDir {
+				fmt.Printf("Touch directory: %v\n", r.Path)
+			} else {
+				fmt.Printf("Touch file: %v\n", r.Path)
+			}
+		}
 	}
-	touchRunner.UpdateFile(filename, currentTime)
+	r, err := touchRunner.UpdateFile(filename, currentTime)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	if r.IsDir {
+		fmt.Printf("Touch directory: %v\n", r.Path)
+	} else {
+		fmt.Printf("Touch file: %v\n", r.Path)
+	}
 }

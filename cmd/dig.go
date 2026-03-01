@@ -54,15 +54,46 @@ func runDig(args []string) {
 	if recordType != "" {
 		switch recordType {
 		case "A":
-			digRunner.PrintAddress(domain, resolver)
+			result, err := digRunner.Address(domain, resolver)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+			printAddress(result)
 		case "CNAME":
-			digRunner.PrintCNAME(domain, resolver)
+			cname, err := digRunner.CNAME(domain, resolver)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+			fmt.Printf("%v canonical name %v\n", domain, cname)
 		case "MX":
-			digRunner.PrintMX(domain, resolver)
+			records, err := digRunner.MX(domain, resolver)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+			for _, mx := range records {
+				fmt.Printf("%v mail is handled by %v %v\n", domain, mx.Pref, mx.Host)
+			}
 		case "NS":
-			digRunner.PrintNS(domain, resolver)
+			records, err := digRunner.NS(domain, resolver)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+			for _, ns := range records {
+				fmt.Printf("%v name server %v\n", domain, ns.Host)
+			}
 		case "TXT":
-			digRunner.PrintTXT(domain, resolver)
+			records, err := digRunner.TXT(domain, resolver)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+			for _, txt := range records {
+				fmt.Printf("%v has TXT record %v\n", domain, txt)
+			}
 		default:
 			fmt.Printf("Unsupported record type: %s\nSupported types: A, CNAME, MX, NS, TXT\n", digCmdData.RecordType)
 			os.Exit(2)
@@ -70,10 +101,36 @@ func runDig(args []string) {
 		return
 	}
 
-	digRunner.PrintAddress(domain, resolver)
+	result, err := digRunner.Address(domain, resolver)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	printAddress(result)
 	if digCmdData.Verbose {
-		digRunner.PrintMX(domain, resolver)
-		digRunner.PrintNS(domain, resolver)
-		digRunner.PrintTXT(domain, resolver)
+		if records, err := digRunner.MX(domain, resolver); err == nil {
+			for _, mx := range records {
+				fmt.Printf("%v mail is handled by %v %v\n", domain, mx.Pref, mx.Host)
+			}
+		}
+		if records, err := digRunner.NS(domain, resolver); err == nil {
+			for _, ns := range records {
+				fmt.Printf("%v name server %v\n", domain, ns.Host)
+			}
+		}
+		if records, err := digRunner.TXT(domain, resolver); err == nil {
+			for _, txt := range records {
+				fmt.Printf("%v has TXT record %v\n", domain, txt)
+			}
+		}
+	}
+}
+
+func printAddress(result digRunner.AddressResult) {
+	for _, alias := range result.Aliases {
+		fmt.Printf("%v is an alias for %v\n", alias.From, alias.To)
+	}
+	for _, ip := range result.IPs {
+		fmt.Printf("%v has address %v\n", result.Final, ip)
 	}
 }

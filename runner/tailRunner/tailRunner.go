@@ -2,7 +2,6 @@ package tailRunner
 
 import (
 	"bytes"
-	"fmt"
 	"os"
 )
 
@@ -53,10 +52,12 @@ func SeekLines(fileName string, n int) (int64, error) {
 	return 0, nil
 }
 
-func ReadFile(fileName string, lastPosition int64, currentPosition int64) int64 {
+// ReadFile reads new content between lastPosition and currentPosition.
+// Returns the content as a string and the updated position.
+func ReadFile(fileName string, lastPosition int64, currentPosition int64) (string, int64) {
 	file, err := os.Open(fileName)
 	if err != nil {
-		return lastPosition
+		return "", lastPosition
 	}
 	defer file.Close()
 
@@ -65,8 +66,7 @@ func ReadFile(fileName string, lastPosition int64, currentPosition int64) int64 
 	_, err = file.ReadAt(buf, lastPosition)
 	if err == nil && bufSize > 0 {
 		// Normalise \r\n to \n so Windows text files display correctly.
-		fmt.Printf("%s", bytes.ReplaceAll(buf, []byte("\r\n"), []byte("\n")))
+		return string(bytes.ReplaceAll(buf, []byte("\r\n"), []byte("\n"))), currentPosition
 	}
-	return currentPosition
-
+	return "", currentPosition
 }
