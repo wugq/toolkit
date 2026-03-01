@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"toolkit/runner/uuidrunner"
+	"toolkit/runner/uuid"
 
 	"github.com/spf13/cobra"
 )
@@ -24,5 +24,5 @@ func init() {
 }
 
 func runUUID() {
-	fmt.Println(uuidrunner.Generate())
+	fmt.Println(uuid.Generate())
 }

@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"toolkit/runner/jsonrunner"
+	"toolkit/runner/json"
 	"toolkit/utils/stdinutil"
 
 	"github.com/spf13/cobra"
@@ -62,7 +62,7 @@ func runJson(args []string) {
 		}
 	}
 
-	result, err := jsonrunner.PrettyPrint(input)
+	result, err := json.PrettyPrint(input)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)

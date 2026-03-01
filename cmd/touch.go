@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 	"os"
 	"time"
-	"toolkit/runner/touchrunner"
+	"toolkit/runner/touch"
 	"toolkit/utils/fileutil"
 )
 
@@ -53,7 +53,7 @@ func runTouch(args []string) {
 
 	isDir, _ := fileutil.IsDirectory(filename)
 	if isDir && touchCmdData.isRecursive {
-		results, err := touchrunner.UpdateDirectoryRecursively(filename, currentTime)
+		results, err := touch.UpdateDirectoryRecursively(filename, currentTime)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -66,7 +66,7 @@ func runTouch(args []string) {
 			}
 		}
 	}
-	r, err := touchrunner.UpdateFile(filename, currentTime)
+	r, err := touch.UpdateFile(filename, currentTime)
 	if err != nil {
 		fmt.Println(err)
 		return

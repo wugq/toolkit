@@ -7,8 +7,8 @@
 
 ## Testing
 
-- Unit tests live in each runner package alongside the source (e.g. `runner/daterunner/date_test.go`).
+- Unit tests live in each runner package alongside the source (e.g. `runner/date/date_test.go`).
 - Test files use the same package name (white-box), giving access to unexported helpers.
-- `iprunner` has no unit tests — `LocalIPs` depends on the host network state and `PublicIP` calls an external API; treat these as integration tests.
+- `runner/ip` has no unit tests — `LocalIPs` depends on the host network state and `PublicIP` calls an external API; treat these as integration tests.
 - `stdinutil` has only a smoke test because its functions read directly from `os.Stdin`.
 - Run all tests: `go test ./...`

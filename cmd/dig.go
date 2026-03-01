@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"toolkit/runner/digrunner"
+	"toolkit/runner/dig"
 
 	"github.com/spf13/cobra"
 )
@@ -47,28 +47,28 @@ func init() {
 }
 
 func runDig(args []string) {
-	domain := digrunner.FormatDomain(args[0])
+	domain := dig.FormatDomain(args[0])
 	recordType := strings.ToUpper(digCmdData.RecordType)
-	resolver := digrunner.NewResolver(digCmdData.Resolver)
+	resolver := dig.NewResolver(digCmdData.Resolver)
 
 	if recordType != "" {
 		switch recordType {
 		case "A":
-			result, err := digrunner.Address(domain, resolver)
+			result, err := dig.Address(domain, resolver)
 			if err != nil {
 				fmt.Println(err)
 				os.Exit(1)
 			}
 			printAddress(result)
 		case "CNAME":
-			cname, err := digrunner.CNAME(domain, resolver)
+			cname, err := dig.CNAME(domain, resolver)
 			if err != nil {
 				fmt.Println(err)
 				os.Exit(1)
 			}
 			fmt.Printf("%v canonical name %v\n", domain, cname)
 		case "MX":
-			records, err := digrunner.MX(domain, resolver)
+			records, err := dig.MX(domain, resolver)
 			if err != nil {
 				fmt.Println(err)
 				os.Exit(1)
@@ -77,7 +77,7 @@ func runDig(args []string) {
 				fmt.Printf("%v mail is handled by %v %v\n", domain, mx.Pref, mx.Host)
 			}
 		case "NS":
-			records, err := digrunner.NS(domain, resolver)
+			records, err := dig.NS(domain, resolver)
 			if err != nil {
 				fmt.Println(err)
 				os.Exit(1)
@@ -86,7 +86,7 @@ func runDig(args []string) {
 				fmt.Printf("%v name server %v\n", domain, ns.Host)
 			}
 		case "TXT":
-			records, err := digrunner.TXT(domain, resolver)
+			records, err := dig.TXT(domain, resolver)
 			if err != nil {
 				fmt.Println(err)
 				os.Exit(1)
@@ -101,24 +101,24 @@ func runDig(args []string) {
 		return
 	}
 
-	result, err := digrunner.Address(domain, resolver)
+	result, err := dig.Address(domain, resolver)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 	printAddress(result)
 	if digCmdData.Verbose {
-		if records, err := digrunner.MX(domain, resolver); err == nil {
+		if records, err := dig.MX(domain, resolver); err == nil {
 			for _, mx := range records {
 				fmt.Printf("%v mail is handled by %v %v\n", domain, mx.Pref, mx.Host)
 			}
 		}
-		if records, err := digrunner.NS(domain, resolver); err == nil {
+		if records, err := dig.NS(domain, resolver); err == nil {
 			for _, ns := range records {
 				fmt.Printf("%v name server %v\n", domain, ns.Host)
 			}
 		}
-		if records, err := digrunner.TXT(domain, resolver); err == nil {
+		if records, err := dig.TXT(domain, resolver); err == nil {
 			for _, txt := range records {
 				fmt.Printf("%v has TXT record %v\n", domain, txt)
 			}
@@ -126,7 +126,7 @@ func runDig(args []string) {
 	}
 }
 
-func printAddress(result digrunner.AddressResult) {
+func printAddress(result dig.AddressResult) {
 	for _, alias := range result.Aliases {
 		fmt.Printf("%v is an alias for %v\n", alias.From, alias.To)
 	}

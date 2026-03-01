@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"toolkit/runner/encoderunner"
+	"toolkit/runner/encode"
 	"toolkit/utils/stdinutil"
 
 	"github.com/spf13/cobra"
@@ -62,8 +62,8 @@ func init() {
 
 func runEncode(text string) {
 	if encodeCmdData.useBase64 {
-		fmt.Println(encoderunner.Base64Encode(text))
+		fmt.Println(encode.Base64Encode(text))
 	} else if encodeCmdData.useURL {
-		fmt.Println(encoderunner.URLEncode(text))
+		fmt.Println(encode.URLEncode(text))
 	}
 }

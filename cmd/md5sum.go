@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"os"
-	"toolkit/runner/md5sumrunner"
+	"toolkit/runner/md5sum"
 	"toolkit/utils/fileutil"
 	"toolkit/utils/stdinutil"
 )
@@ -57,14 +57,14 @@ func runMd5Sum(args []string) {
 			fmt.Println("File is incorrect.")
 		}
 
-		checksum, err := md5sumrunner.CheckFile(userInput, md5sumCmdData.algo)
+		checksum, err := md5sum.CheckFile(userInput, md5sumCmdData.algo)
 		if err != nil {
 			fmt.Printf("error: %v", err)
 			return
 		}
 		fmt.Printf("%v %v", checksum, userInput)
 	} else if md5sumCmdData.text != "" {
-		checksum, err := md5sumrunner.CheckText(md5sumCmdData.text, md5sumCmdData.algo)
+		checksum, err := md5sum.CheckText(md5sumCmdData.text, md5sumCmdData.algo)
 		if err != nil {
 			fmt.Printf("error: %v", err)
 			return
@@ -76,7 +76,7 @@ func runMd5Sum(args []string) {
 			fmt.Printf("error reading stdin: %v\n", err)
 			os.Exit(1)
 		}
-		checksum, err := md5sumrunner.CheckText(string(data), md5sumCmdData.algo)
+		checksum, err := md5sum.CheckText(string(data), md5sumCmdData.algo)
 		if err != nil {
 			fmt.Printf("error: %v", err)
 			return

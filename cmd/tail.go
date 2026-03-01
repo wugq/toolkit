@@ -5,7 +5,7 @@ import (
 	"github.com/spf13/cobra"
 	"os"
 	"time"
-	"toolkit/runner/tailrunner"
+	"toolkit/runner/tail"
 	"toolkit/utils/fileutil"
 )
 
@@ -45,7 +45,7 @@ func init() {
 func runTail(args []string) {
 	logFile := args[0]
 
-	lastPosition, err := tailrunner.SeekLines(logFile, tailCmdData.lines)
+	lastPosition, err := tail.SeekLines(logFile, tailCmdData.lines)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -57,7 +57,7 @@ func runTail(args []string) {
 		os.Exit(1)
 	}
 
-	content, lastPosition := tailrunner.ReadFile(logFile, lastPosition, currentPosition)
+	content, lastPosition := tail.ReadFile(logFile, lastPosition, currentPosition)
 	fmt.Print(content)
 
 	if !tailCmdData.isFollow {
@@ -74,7 +74,7 @@ func runTail(args []string) {
 		if lastPosition == currentPosition {
 			continue
 		}
-		content, lastPosition = tailrunner.ReadFile(logFile, lastPosition, currentPosition)
+		content, lastPosition = tail.ReadFile(logFile, lastPosition, currentPosition)
 		fmt.Print(content)
 	}
 }

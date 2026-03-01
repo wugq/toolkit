@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"time"
-	"toolkit/runner/daterunner"
+	"toolkit/runner/date"
 
 	"github.com/spf13/cobra"
 )
@@ -12,7 +12,7 @@ import (
 type DateCmdData struct {
 	TimeStamp int64
 	TimeText  string
-	AddTime   daterunner.AddDate
+	AddTime   date.AddDate
 	Timezone  string
 	DiffText  string
 }
@@ -77,7 +77,7 @@ func runDate() error {
 	if dateCmdData.TimeStamp != 0 {
 		tm = time.Unix(dateCmdData.TimeStamp, 0)
 	} else if len(dateCmdData.TimeText) > 0 {
-		tm, err = daterunner.ParseDateText(dateCmdData.TimeText)
+		tm, err = date.ParseDateText(dateCmdData.TimeText)
 		if err != nil {
 			return err
 		}
@@ -85,7 +85,7 @@ func runDate() error {
 		tm = time.Now()
 	}
 
-	tm, err = daterunner.Add(tm, dateCmdData.AddTime)
+	tm, err = date.Add(tm, dateCmdData.AddTime)
 	if err != nil {
 		return err
 	}
@@ -99,11 +99,11 @@ func runDate() error {
 	}
 
 	if dateCmdData.DiffText != "" {
-		tm2, err := daterunner.ParseDateText(dateCmdData.DiffText)
+		tm2, err := date.ParseDateText(dateCmdData.DiffText)
 		if err != nil {
 			return fmt.Errorf("invalid --diff date: %v", err)
 		}
-		diff := daterunner.Diff(tm, tm2)
+		diff := date.Diff(tm, tm2)
 		fmt.Printf("Difference: %d days, %d hours, %d minutes, %d seconds\n", diff.Days, diff.Hours, diff.Minutes, diff.Seconds)
 		return nil
 	}

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"time"
-	"toolkit/runner/portrunner"
+	"toolkit/runner/port"
 
 	"github.com/spf13/cobra"
 )
@@ -31,7 +31,7 @@ Examples:
 			os.Exit(2)
 		}
 		timeout := time.Duration(portCmdData.timeout) * time.Second
-		open, err := portrunner.Check(args[0], args[1], timeout)
+		open, err := port.Check(args[0], args[1], timeout)
 		if err != nil {
 			fmt.Printf("error: %v\n", err)
 			os.Exit(1)

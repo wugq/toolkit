@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"toolkit/runner/iprunner"
+	"toolkit/runner/ip"
 
 	"github.com/spf13/cobra"
 )
@@ -40,7 +40,7 @@ func init() {
 
 func runIP() {
 	if ipCmdData.publicOnly {
-		ip, err := iprunner.PublicIP()
+		ip, err := ip.PublicIP()
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -48,7 +48,7 @@ func runIP() {
 		fmt.Printf("Public %s\n", ip)
 		return
 	}
-	ips, err := iprunner.LocalIPs()
+	ips, err := ip.LocalIPs()
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -57,7 +57,7 @@ func runIP() {
 		fmt.Println(line)
 	}
 	if !ipCmdData.localOnly {
-		ip, err := iprunner.PublicIP()
+		ip, err := ip.PublicIP()
 		if err != nil {
 			fmt.Println(err)
 			return
