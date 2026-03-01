@@ -17,6 +17,7 @@ Commands:
   md5sum  Compute the MD5 checksum of a file or text string
   tail    Print the end of a file, with optional follow mode
   touch   Update the modification time of a file or directory
+  env     List environment variables
 
   generate password  Generate a random password
   generate uuid      Generate a random UUID
@@ -30,4 +31,3 @@ func Execute() {
 		os.Exit(1)
 	}
 }
-
